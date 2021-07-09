@@ -9,7 +9,7 @@ export class JoinInput {
   password: string;
 
   @IsString()
-  name: string;
+  username: string;
 }
 
 export class JoinOutput extends CoreOutput {}

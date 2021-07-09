@@ -73,6 +73,7 @@ export class UsersService {
         token,
       };
     } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error,
@@ -88,7 +89,7 @@ export class UsersService {
       select: {
         id: true,
         email: true,
-        name: true,
+        username: true,
       },
     });
   }

@@ -6,7 +6,7 @@ export class EditPostInput {
   title?: string;
 
   @IsString()
-  contents?: string;
+  subtitle?: string;
 
   @IsString()
   categoryName?: string;

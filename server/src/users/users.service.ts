@@ -59,7 +59,6 @@ export class UsersService {
           error: '존재하지 않는 계정입니다.',
         };
       }
-      console.log(user.password)
 
       const passwordCorrecet = await checkPassword(password, user.password);
       if (!passwordCorrecet) {
@@ -101,8 +100,8 @@ export class UsersService {
       });
 
       if (exist) {
-        console.log('exists');
         // 로그인. 토큰 보내주기
+        console.log('exists');
         const token = jwt.sign({ id: kakaoId }, process.env.JWT_KEY);
         return {
           ok: true,

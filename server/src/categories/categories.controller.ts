@@ -18,7 +18,7 @@ export class CategoriesController {
   ): Promise<CreateCategoryOutput> {
     return this.categoriesService.createCategory(createCategoryInput);
   }
-  
+
   @Get('/all')
   async findAllCategories(): Promise<SeeAllCategoriesOutput> {
     return this.categoriesService.findAllCategories();

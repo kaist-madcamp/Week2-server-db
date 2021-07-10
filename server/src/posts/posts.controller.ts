@@ -36,9 +36,7 @@ export class PostsController {
   }
 
   @Get('/all/:categoryId')
-  async findPostsByCategory(
-    @Param() params: FindPostsByCategoryInput,
-  ): Promise<FindPostsByCategoryOutput> {
+  async findPostsByCategory(@Param() params: FindPostsByCategoryInput) {
     return this.postsService.findPostsByCategory(params);
   }
 

@@ -4,13 +4,12 @@ import {
   CreateCategoryInput,
   CreateCategoryOutput,
 } from './dtos/create-category.dto';
-import { SeeAllCategoriesOutput } from './dtos/see-all-categories.dto';
 
 @Injectable()
 export class CategoriesService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async findAllCategories(): Promise<SeeAllCategoriesOutput> {
+  async findAllCategories() {
     try {
       const categories = await this.prismaService.category.findMany();
       return {
@@ -58,4 +57,6 @@ export class CategoriesService {
       };
     }
   }
+  
+  
 }

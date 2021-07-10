@@ -59,13 +59,13 @@ export class PostsService {
           title: true,
           subtitle: true,
           authorId: true,
-        }
+        },
       });
 
       console.log(posts);
       return {
         ok: true,
-        posts,
+        posts: posts,
       };
     } catch (error) {
       return {
@@ -175,6 +175,15 @@ export class PostsService {
           error: '권한이 없습니다.',
         };
       }
+
+      await this.prismaService.post.update({
+        where: {
+          id: +id,
+        },
+        data: {
+          ...editPostInput,
+        },
+      });
 
       return {
         ok: true,

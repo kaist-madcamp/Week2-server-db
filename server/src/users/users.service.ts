@@ -5,6 +5,7 @@ import { User, Prisma } from '@prisma/client';
 import { JoinInput, JoinOutput } from './dto/join.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { checkPassword, hashPassword } from './users.utils';
+import { KakaoAuthInput, KakaoAuthOutput } from './dto/kakao-auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -58,6 +59,7 @@ export class UsersService {
           error: '존재하지 않는 계정입니다.',
         };
       }
+      console.log(user.password)
 
       const passwordCorrecet = await checkPassword(password, user.password);
       if (!passwordCorrecet) {
@@ -72,6 +74,53 @@ export class UsersService {
         ok: true,
         token,
       };
+    } catch (error) {
+      console.log(error);
+      return {
+        ok: false,
+        error: '로그인에 실패하였습니다.',
+      };
+    }
+  }
+
+  async socialAuth(kakaoAuthInput: KakaoAuthInput): Promise<KakaoAuthOutput> {
+    try {
+      const { kakaoId, email, username } = kakaoAuthInput;
+      console.log('here!!');
+      const exist = await this.prismaService.user.findFirst({
+        where: {
+          OR: [
+            {
+              id: +kakaoId,
+            },
+            {
+              email,
+            },
+          ],
+        },
+      });
+
+      if (exist) {
+        console.log('exists');
+        // 로그인. 토큰 보내주기
+        const token = jwt.sign({ id: kakaoId }, process.env.JWT_KEY);
+        return {
+          ok: true,
+          token,
+        };
+      } else {
+        // 회원가입. 유저 생성하기
+        const user = await this.prismaService.user.create({
+          data: {
+            id: +kakaoId,
+            email,
+            username,
+          },
+        });
+        return {
+          ok: true,
+        };
+      }
     } catch (error) {
       console.log(error);
       return {

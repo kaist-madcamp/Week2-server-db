@@ -1,12 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Req,
-} from '@nestjs/common';
+import { Body, Controller, Get, Post, Req } from '@nestjs/common';
 import { Request } from 'express';
 import { JoinInput, JoinOutput } from './dto/join.dto';
+import { KakaoAuthInput, KakaoAuthOutput } from './dto/kakao-auth.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { UsersService } from './users.service';
 
@@ -22,6 +17,14 @@ export class UsersController {
   @Post('/login')
   async login(@Body() loginInput: LoginInput): Promise<LoginOutput> {
     return this.usersService.login(loginInput);
+  }
+
+  @Post('/kakao')
+  async socialAuth(
+    @Body() kakaoAuthInput: KakaoAuthInput,
+  ): Promise<KakaoAuthOutput> {
+    console.log('hello')
+    return this.usersService.socialAuth(kakaoAuthInput);
   }
 
   @Get('/me')

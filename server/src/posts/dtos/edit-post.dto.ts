@@ -1,15 +1,15 @@
 import { CoreOutput } from './../../common/dtos/output.dto';
 import { IsString } from 'class-validator';
 
-export class CreatePostInput {
+export class EditPostInput {
   @IsString()
-  title: string;
+  title?: string;
 
   @IsString()
-  subtitle?: string;
+  contents?: string;
 
   @IsString()
-  categoryName: string;
+  categoryName?: string;
 }
 
-export class CreatePostOutput extends CoreOutput {}
+export class EditPostOutput extends CoreOutput {}

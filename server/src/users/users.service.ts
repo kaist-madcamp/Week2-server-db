@@ -85,12 +85,11 @@ export class UsersService {
   async socialAuth(kakaoAuthInput: KakaoAuthInput): Promise<KakaoAuthOutput> {
     try {
       const { kakaoId, email, username } = kakaoAuthInput;
-      console.log('here!!');
       const exist = await this.prismaService.user.findFirst({
         where: {
           OR: [
             {
-              id: +kakaoId,
+              id: kakaoId,
             },
             {
               email,
@@ -111,7 +110,7 @@ export class UsersService {
         // 회원가입. 유저 생성하기
         const user = await this.prismaService.user.create({
           data: {
-            id: +kakaoId,
+            id: kakaoId,
             email,
             username,
           },

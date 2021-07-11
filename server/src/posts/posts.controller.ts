@@ -1,3 +1,4 @@
+import { ToggleLikeOutput } from './dtos/toggle-like-post.dto';
 import {
   Body,
   Controller,
@@ -6,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { User } from '@prisma/client';
@@ -22,7 +24,8 @@ import {
   FindPostsByCategoryInput,
   FindPostsByCategoryOutput,
 } from './dtos/find-posts-by-category.dto';
-import { PostsService } from './posts.service';
+import { PostsService, SearchService } from './posts.service';
+import { SearchPostsByQueryOutput } from './dtos/search-posts-by-query.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -36,7 +39,9 @@ export class PostsController {
   }
 
   @Get('/all/:categoryId')
-  async findPostsByCategory(@Param() params: FindPostsByCategoryInput) {
+  async findPostsByCategory(
+    @Param() params: FindPostsByCategoryInput,
+  ): Promise<FindPostsByCategoryOutput> {
     return this.postsService.findPostsByCategory(params);
   }
 
@@ -66,5 +71,27 @@ export class PostsController {
     @Body() editPost: EditPostInput,
   ): Promise<EditPostOutput> {
     return this.postsService.editPost(owner, id, editPost);
+  }
+
+  @Post('/toggleLike')
+  @UseGuards(AuthGuard)
+  async toggleLikePost(
+    @AuthUser() authUser: User,
+    @Body('postId')
+    postId: string,
+  ): Promise<ToggleLikeOutput> {
+    return this.postsService.toggleLikePost(authUser, postId);
+  }
+}
+
+@Controller('search')
+export class SearchController {
+  constructor(private readonly searchService: SearchService) {}
+
+  @Get('/')
+  async searchPostsByQuery(
+    @Query('query') query: string,
+  ): Promise<SearchPostsByQueryOutput> {
+    return this.searchService.searchPostsByQuery(query);
   }
 }

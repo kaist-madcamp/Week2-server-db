@@ -8,28 +8,42 @@ generator client {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  username  String
-  password  String?
-  avatar    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  Post      Post[]
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  username   String
+  password   String?
+  avatar     String?
+  followedBy User[]   @relation("FollowRelation", references: [id])
+  followings User[]   @relation("FollowRelation", references: [id])
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  posts      Post[]
+  likes      Like[]
 }
 
 model Post {
   id         Int      @id @default(autoincrement())
   title      String
-  subtitle   String?
+  contents   String?
   author     User?    @relation(fields: [authorId], references: [id])
   authorId   Int?
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId Int
+  likes      Like[]
 }
 
 model Category {
   id    Int    @id @default(autoincrement())
   name  String @unique
-  Posts Post[]
+  posts Post[]
+}
+
+model Like {
+  id     Int  @id @default(autoincrement())
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+  post   Post @relation(fields: [postId], references: [id])
+  postId Int
+
+  @@unique([userId, postId])
 }

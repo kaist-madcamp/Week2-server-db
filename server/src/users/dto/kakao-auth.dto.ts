@@ -1,4 +1,4 @@
-import { IsString } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 import { CoreOutput } from '../../common/dtos/output.dto';
 
 export class KakaoAuthInput {
@@ -7,9 +7,9 @@ export class KakaoAuthInput {
 
   @IsString()
   email: string;
-  
-  @IsString()
-  kakaoId: string;
+
+  @IsNumber()
+  kakaoId: number;
 }
 
 export class KakaoAuthOutput extends CoreOutput {

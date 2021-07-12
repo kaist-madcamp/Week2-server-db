@@ -18,6 +18,7 @@ import {
   DeleteCommentOutput,
 } from './dtos/delete-comment.dto';
 import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
+import { EditCommentInput, EditCommentOutput } from './dtos/edit-comment.dto';
 
 @Injectable()
 export class PostsService {
@@ -356,6 +357,47 @@ export class PostsService {
     }
   }
 
+  public async editComment(
+    authUser: User,
+    { postId, payload }: EditCommentInput,
+  ): Promise<EditCommentOutput> {
+    try {
+      const comment = await this.prismaService.comment.findUnique({
+        where: {
+          id: postId,
+        },
+      });
+
+      if (!comment) {
+        return {
+          ok: false,
+          error: '존재하지 않는 댓글입니다.',
+        };
+      }
+
+      if (comment.userId !== authUser.id) {
+        return {
+          ok: false,
+          error: '본인의 댓글이 아닙니다.',
+        };
+      }
+
+      await this.prismaService.comment.update({
+        where: {
+          id: postId,
+        },
+        data: {
+          payload,
+        },
+      });
+      return {
+        ok: true,
+      };
+    } catch (error) {
+      return;
+    }
+  }
+
   public async findCommentsByPostId(
     postId: string,
   ): Promise<FindCommentsByPostIdOutput> {
@@ -407,7 +449,7 @@ export class SearchService {
           title: true,
           contents: true,
           authorId: true,
-          likes: true
+          likes: true,
         },
         take: 10,
       });

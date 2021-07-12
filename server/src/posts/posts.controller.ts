@@ -29,6 +29,7 @@ import {
   DeleteCommentOutput,
 } from './dtos/delete-comment.dto';
 import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
+import { EditCommentInput, EditCommentOutput } from './dtos/edit-comment.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -101,6 +102,15 @@ export class PostsController {
     @Body() deleteCommentInput: DeleteCommentInput,
   ): Promise<DeleteCommentOutput> {
     return this.postsService.deleteComment(authUser, deleteCommentInput);
+  }
+
+  @Put('/comment')
+  @UseGuards(AuthGuard)
+  async editComment(
+    @AuthUser() authUser: User,
+    @Body() editCommentInput: EditCommentInput,
+  ): Promise<EditCommentOutput> {
+    return this.postsService.editComment(authUser, editCommentInput);
   }
 
   @Get('/comments/:postId')

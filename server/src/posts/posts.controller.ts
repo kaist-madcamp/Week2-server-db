@@ -14,35 +14,38 @@ import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { CreatePostInput, CreatePostOutput } from './dtos/create-post.dto';
-import { DeletePostInput, DeletePostOutput } from './dtos/delete-post.dto';
+import { DeletePostOutput } from './dtos/delete-post.dto';
 import { EditPostInput, EditPostOutput } from './dtos/edit-post.dto';
-import {
-  FindPostByIdInput,
-  FindPostByIdOutput,
-} from './dtos/find-post-by-id.dto';
-import {
-  FindPostsByCategoryInput,
-  FindPostsByCategoryOutput,
-} from './dtos/find-posts-by-category.dto';
+import { FindPostByIdOutput } from './dtos/find-post-by-id.dto';
+import { FindPostsByCategoryOutput } from './dtos/find-posts-by-category.dto';
 import { PostsService, SearchService } from './posts.service';
 import { SearchPostsByQueryOutput } from './dtos/search-posts-by-query.dto';
+import {
+  CreateCommentInput,
+  CreateCommentOutput,
+} from './dtos/create-comment.dto';
+import {
+  DeleteCommentInput,
+  DeleteCommentOutput,
+} from './dtos/delete-comment.dto';
+import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
-  @Get('/:id')
+  @Get('/:postId')
   async findPostById(
-    @Param() params: FindPostByIdInput,
+    @Param('postId') postId: string,
   ): Promise<FindPostByIdOutput> {
-    return this.postsService.findPostById(params);
+    return this.postsService.findPostById(postId);
   }
 
   @Get('/all/:categoryId')
   async findPostsByCategory(
-    @Param() params: FindPostsByCategoryInput,
+    @Param('categoryId') categoryId: string,
   ): Promise<FindPostsByCategoryOutput> {
-    return this.postsService.findPostsByCategory(params);
+    return this.postsService.findPostsByCategory(categoryId);
   }
 
   @Post('')
@@ -54,16 +57,16 @@ export class PostsController {
     return this.postsService.createPost(authUser, createPostInput);
   }
 
-  @Delete(':id')
+  @Delete('/:postId')
   @UseGuards(AuthGuard)
   async deletePost(
     @AuthUser() owner: User,
-    @Param() params: DeletePostInput,
+    @Param('postId') postId: string,
   ): Promise<DeletePostOutput> {
-    return this.postsService.deletePost(owner, params);
+    return this.postsService.deletePost(owner, postId);
   }
 
-  @Put(':id')
+  @Put('/:id')
   @UseGuards(AuthGuard)
   async editPost(
     @AuthUser() owner: User,
@@ -77,10 +80,34 @@ export class PostsController {
   @UseGuards(AuthGuard)
   async toggleLikePost(
     @AuthUser() authUser: User,
-    @Body('postId')
-    postId: string,
+    @Body('postId') postId: string,
   ): Promise<ToggleLikeOutput> {
     return this.postsService.toggleLikePost(authUser, postId);
+  }
+
+  @Post('/comment')
+  @UseGuards(AuthGuard)
+  async createComment(
+    @AuthUser() authUser: User,
+    @Body() createCommentInput: CreateCommentInput,
+  ): Promise<CreateCommentOutput> {
+    return this.postsService.createComment(authUser, createCommentInput);
+  }
+
+  @Delete('/comment')
+  @UseGuards(AuthGuard)
+  async deleteComment(
+    @AuthUser() authUser: User,
+    @Body() deleteCommentInput: DeleteCommentInput,
+  ): Promise<DeleteCommentOutput> {
+    return this.postsService.deleteComment(authUser, deleteCommentInput);
+  }
+
+  @Get('/comments/:postId')
+  async findCommentsByPostId(
+    @Param('postId') postId: string,
+  ): Promise<FindCommentsByPostIdOutput> {
+    return this.postsService.findCommentsByPostId(postId);
   }
 }
 

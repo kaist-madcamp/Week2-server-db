@@ -24,10 +24,7 @@ import {
   CreateCommentInput,
   CreateCommentOutput,
 } from './dtos/create-comment.dto';
-import {
-  DeleteCommentInput,
-  DeleteCommentOutput,
-} from './dtos/delete-comment.dto';
+import { DeleteCommentOutput } from './dtos/delete-comment.dto';
 import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
 import { EditCommentInput, EditCommentOutput } from './dtos/edit-comment.dto';
 
@@ -58,15 +55,6 @@ export class PostsController {
     return this.postsService.createPost(authUser, createPostInput);
   }
 
-  @Delete('/:postId')
-  @UseGuards(AuthGuard)
-  async deletePost(
-    @AuthUser() owner: User,
-    @Param('postId') postId: string,
-  ): Promise<DeletePostOutput> {
-    return this.postsService.deletePost(owner, postId);
-  }
-
   @Put('/:id')
   @UseGuards(AuthGuard)
   async editPost(
@@ -77,7 +65,16 @@ export class PostsController {
     return this.postsService.editPost(owner, id, editPost);
   }
 
-  @Post('/toggleLike')
+  @Delete('/:postId')
+  @UseGuards(AuthGuard)
+  async deletePost(
+    @AuthUser() owner: User,
+    @Param('postId') postId: string,
+  ): Promise<DeletePostOutput> {
+    return this.postsService.deletePost(owner, postId);
+  }
+
+  @Post('/like')
   @UseGuards(AuthGuard)
   async toggleLikePost(
     @AuthUser() authUser: User,
@@ -95,29 +92,30 @@ export class PostsController {
     return this.postsService.createComment(authUser, createCommentInput);
   }
 
-  @Delete('/comment')
-  @UseGuards(AuthGuard)
-  async deleteComment(
-    @AuthUser() authUser: User,
-    @Body() deleteCommentInput: DeleteCommentInput,
-  ): Promise<DeleteCommentOutput> {
-    return this.postsService.deleteComment(authUser, deleteCommentInput);
-  }
-
-  @Put('/comment')
-  @UseGuards(AuthGuard)
-  async editComment(
-    @AuthUser() authUser: User,
-    @Body() editCommentInput: EditCommentInput,
-  ): Promise<EditCommentOutput> {
-    return this.postsService.editComment(authUser, editCommentInput);
-  }
-
   @Get('/comments/:postId')
   async findCommentsByPostId(
     @Param('postId') postId: string,
   ): Promise<FindCommentsByPostIdOutput> {
     return this.postsService.findCommentsByPostId(postId);
+  }
+
+  @Put('/comment/:commentId')
+  @UseGuards(AuthGuard)
+  async editComment(
+    @AuthUser() authUser: User,
+    @Param('commentId') commentId: number,
+    @Body() editCommentInput: EditCommentInput,
+  ): Promise<EditCommentOutput> {
+    return this.postsService.editComment(authUser, commentId, editCommentInput);
+  }
+
+  @Delete('/comment/:commentId')
+  @UseGuards(AuthGuard)
+  async deleteComment(
+    @AuthUser() authUser: User,
+    @Param('commentId') commentId: number,
+  ): Promise<DeleteCommentOutput> {
+    return this.postsService.deleteComment(authUser, commentId);
   }
 }
 

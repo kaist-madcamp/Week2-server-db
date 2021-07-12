@@ -13,10 +13,7 @@ import {
   CreateCommentInput,
   CreateCommentOutput,
 } from './dtos/create-comment.dto';
-import {
-  DeleteCommentInput,
-  DeleteCommentOutput,
-} from './dtos/delete-comment.dto';
+import { DeleteCommentOutput } from './dtos/delete-comment.dto';
 import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
 import { EditCommentInput, EditCommentOutput } from './dtos/edit-comment.dto';
 
@@ -321,7 +318,7 @@ export class PostsService {
 
   public async deleteComment(
     authUser: User,
-    { commentId }: DeleteCommentInput,
+    commentId: number,
   ): Promise<DeleteCommentOutput> {
     try {
       const comment = await this.prismaService.comment.findUnique({
@@ -359,12 +356,13 @@ export class PostsService {
 
   public async editComment(
     authUser: User,
-    { postId, payload }: EditCommentInput,
+    commentId,
+    { payload }: EditCommentInput,
   ): Promise<EditCommentOutput> {
     try {
       const comment = await this.prismaService.comment.findUnique({
         where: {
-          id: postId,
+          id: commentId,
         },
       });
 
@@ -384,7 +382,7 @@ export class PostsService {
 
       await this.prismaService.comment.update({
         where: {
-          id: postId,
+          id: commentId,
         },
         data: {
           payload,
@@ -457,7 +455,7 @@ export class SearchService {
       console.log(posts);
       return {
         ok: true,
-        posts,
+        posts: computeLikesNumber(posts),
       };
     } catch (error) {
       return {

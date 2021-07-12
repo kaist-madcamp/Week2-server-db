@@ -23,7 +23,6 @@ export class UsersController {
   async socialAuth(
     @Body() kakaoAuthInput: KakaoAuthInput,
   ): Promise<KakaoAuthOutput> {
-    console.log('hello')
     return this.usersService.socialAuth(kakaoAuthInput);
   }
 

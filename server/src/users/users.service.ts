@@ -97,18 +97,18 @@ export class UsersService {
           ],
         },
       });
-
+      
+      const token = jwt.sign({ id: kakaoId }, process.env.JWT_KEY);
       if (exist) {
         // 로그인. 토큰 보내주기
         console.log('exists');
-        const token = jwt.sign({ id: kakaoId }, process.env.JWT_KEY);
         return {
           ok: true,
           token,
         };
       } else {
         // 회원가입. 유저 생성하기
-        const user = await this.prismaService.user.create({
+        await this.prismaService.user.create({
           data: {
             id: kakaoId,
             email,
@@ -117,6 +117,7 @@ export class UsersService {
         });
         return {
           ok: true,
+          token,
         };
       }
     } catch (error) {

@@ -1,5 +1,5 @@
 import { CoreOutput } from './../../common/dtos/output.dto';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, IsNumber } from 'class-validator';
 
 export class EditPostInput {
   @IsString()
@@ -8,11 +8,11 @@ export class EditPostInput {
 
   @IsString()
   @IsOptional()
-  subtitle?: string;
+  contents?: string;
 
-  @IsString()
+  @IsNumber()
   @IsOptional()
-  categoryName?: string;
+  categoryId?: number;
 }
 
 export class EditPostOutput extends CoreOutput {}

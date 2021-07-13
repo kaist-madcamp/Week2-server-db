@@ -12,6 +12,8 @@ import { AppController } from './app.controller';
 import * as Joi from 'joi';
 import { PostsModule } from 'src/posts/posts.module';
 import { CategoriesModule } from 'src/categories/categories.module';
+import { MulterModule } from '@nestjs/platform-express';
+import multer from 'multer';
 
 @Module({
   imports: [

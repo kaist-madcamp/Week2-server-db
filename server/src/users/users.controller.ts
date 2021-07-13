@@ -1,5 +1,8 @@
-import { Body, Controller, Get, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import { User } from '@prisma/client';
 import { Request } from 'express';
+import { AuthUser } from 'src/auth/auth-user.decorator';
+import { AuthGuard } from 'src/auth/auth.guard';
 import { JoinInput, JoinOutput } from './dto/join.dto';
 import { KakaoAuthInput, KakaoAuthOutput } from './dto/kakao-auth.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
@@ -27,7 +30,8 @@ export class UsersController {
   }
 
   @Get('/me')
-  async me(@Req() req: Request) {
-    return req.headers['user'];
+  @UseGuards(AuthGuard)
+  async me(@AuthUser() user: User) {
+    return this.usersService.me(user.id);
   }
 }

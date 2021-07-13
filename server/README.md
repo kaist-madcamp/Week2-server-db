@@ -1,11 +1,4 @@
-# 카이스트 무엇'이든'지 물어보세요
-
-> 김찬영, 정이든
-
-## 주제
-
-카이스트 뭐든지 물어보세요 앱.
-검색창에 쿼리를 입력하면 글자를 포함하는 카테고리/제목을 Dropbox 형태로 보여주기.
+# REST API
 
 [Auth](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.controller.ts#L11)
 

@@ -1,11 +1,12 @@
 import * as jwt from 'jsonwebtoken';
-import { Injectable } from '@nestjs/common';
+import { Injectable, Req } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User, Prisma } from '@prisma/client';
 import { JoinInput, JoinOutput } from './dto/join.dto';
 import { LoginInput, LoginOutput } from './dto/login.dto';
 import { checkPassword, hashPassword } from './users.utils';
 import { KakaoAuthInput, KakaoAuthOutput } from './dto/kakao-auth.dto';
+import { MeOutput } from 'src/posts/dtos/me.dto';
 
 @Injectable()
 export class UsersService {
@@ -97,7 +98,7 @@ export class UsersService {
           ],
         },
       });
-      
+
       const token = jwt.sign({ id: kakaoId }, process.env.JWT_KEY);
       if (exist) {
         // 로그인. 토큰 보내주기
@@ -140,5 +141,34 @@ export class UsersService {
         username: true,
       },
     });
+  }
+
+  async me(userId: number): Promise<MeOutput> {
+    try {
+      const history = await this.prismaService.user.findUnique({
+        where: {
+          id: userId,
+        },
+        select: {
+          username: true,
+          comments: true,
+          posts: true,
+          likes: true,
+        },
+      });
+
+      return {
+        ok: true,
+        username: history.username,
+        postNum: history.posts.length,
+        commentNum: history.comments.length,
+        likeNum: history.likes.length,
+      };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
+    }
   }
 }

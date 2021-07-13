@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
+import express from 'express';
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 
@@ -10,6 +11,8 @@ async function bootstrap() {
 
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+  
+  app.use("/uploads", express.static("uploads"));
 
   app.use((req, res, next) => {
     console.log('headers : ', req.headers);
@@ -21,4 +24,3 @@ async function bootstrap() {
   await app.listen(80);
 }
 bootstrap();
- 

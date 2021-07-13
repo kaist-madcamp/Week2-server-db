@@ -1,34 +1,44 @@
-# 몰입캠프 2주차 
+# 카이스트 무엇'이든'지 물어보세요
+
+> 김찬영, 정이든
 
 ## 주제
+
 카이스트 뭐든지 물어보세요 앱.
 검색창에 쿼리를 입력하면 글자를 포함하는 카테고리/제목을 Dropbox 형태로 보여주기.
 
-Auth
-- [x] Sign up
-- [x] Login
-- [x] me
+[Auth](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.controller.ts#L11)
 
-Post
-- [ ] Create post(s) (pagination)
-- [ ] Read post by id
-- [ ] Delete post
-- [ ] Update post
+- [x] [Sign up (jwt)](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.service.ts#L15)
+- [x] [Login](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.service.ts#L50)
+- [x] [Kakao Login/Sign up](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.service.ts#L86)
+- [x] [Find user by id](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.service.ts#L133)
+- [x] [Me (나의 닉네임, 댓글수, 게시글수, 좋아요수 조회)](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/users/users.service.ts#L146)
 
-Search
-- [ ] Search query (with Elastic search)
+[Category](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/categories/categories.controller.ts#L10)
 
-## Tech
-- client (김찬영)
-  - Android app
-  - Java
+- [x] [Create category](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/categories/categories.service.ts#L28)
+- [x] [See all categories](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/categories/categories.service.ts#L12)
 
-- Server (정이든)
-  - Nestjs
-  - Prisma
-  - TypeScript
-  - (Elastic search)
+[Post](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.controller.ts#L35)
 
-## 팀원 
-- 정이든
-- 김찬영
+- [x] [Find Post by id](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L25)
+- [x] [Find all posts by category](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L63)
+- [x] [Create a post](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L129)
+- [x] [Edit a post](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L208)
+- [x] [Delete a post](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L170)
+- [x] [Check whether post is mine](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L96)
+- [x] [Upload a image (form data)](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.controller.ts#L91)
+- [x] [See a image](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.controller.ts#L98)
+- [x] [Like a post](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L254)
+
+[Comment](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.controller.ts#L86)
+
+- [x] [See Post's comments](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L435)
+- [x] [Create a comment](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L318)
+- [x] [Edit a comment](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L393)
+- [x] [Delete a comment](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L353)
+
+[Search](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.controller.ts#L122)
+
+- [x] [Search post by title](https://github.com/kaist-madcamp/Week2-server-db/blob/master/server/src/posts/posts.service.ts#L471)

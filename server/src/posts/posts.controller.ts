@@ -8,8 +8,11 @@ import {
   Post,
   Put,
   Query,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
+import fs from 'fs';
 import { User } from '@prisma/client';
 import { AuthUser } from 'src/auth/auth-user.decorator';
 import { AuthGuard } from 'src/auth/auth.guard';
@@ -27,11 +30,13 @@ import {
 import { DeleteCommentOutput } from './dtos/delete-comment.dto';
 import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
 import { EditCommentInput, EditCommentOutput } from './dtos/edit-comment.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  // Post
   @Get('/:postId')
   async findPostById(
     @Param('postId') postId: string,
@@ -55,14 +60,23 @@ export class PostsController {
     return this.postsService.createPost(authUser, createPostInput);
   }
 
-  @Put('/:id')
+  @Put('/:postId')
   @UseGuards(AuthGuard)
   async editPost(
     @AuthUser() owner: User,
-    @Param('id') id: string,
+    @Param('postId') postId: string,
     @Body() editPost: EditPostInput,
   ): Promise<EditPostOutput> {
-    return this.postsService.editPost(owner, id, editPost);
+    return this.postsService.editPost(owner, postId, editPost);
+  }
+
+  @Get('/check/:postId')
+  @UseGuards(AuthGuard)
+  async checkPostIsMine(
+    @AuthUser() authUser: User,
+    @Param('postId') postId: string,
+  ) {
+    return this.postsService.checkPosts(authUser, postId);
   }
 
   @Delete('/:postId')
@@ -74,6 +88,24 @@ export class PostsController {
     return this.postsService.deletePost(owner, postId);
   }
 
+  @Post('upload')
+  @UseInterceptors(FileInterceptor('file', { dest: 'uploads/' }))
+  uploadFile(@UploadedFile() file: Express.Multer.File) {
+    console.log(file);
+    return 'hello upload!';
+  }
+
+  @Get('uploads/:file')
+  readImage(@Param('file') file: string) {
+    console.log(file);
+    const img = fs.readFileSync(__dirname + '/uploads/' + file);
+    console.log(img);
+    return {
+      ok: true,
+      img,
+    };
+  }
+
   @Post('/like')
   @UseGuards(AuthGuard)
   async toggleLikePost(
@@ -83,6 +115,7 @@ export class PostsController {
     return this.postsService.toggleLikePost(authUser, postId);
   }
 
+  // Comment
   @Post('/comment')
   @UseGuards(AuthGuard)
   async createComment(
@@ -113,7 +146,7 @@ export class PostsController {
   @UseGuards(AuthGuard)
   async deleteComment(
     @AuthUser() authUser: User,
-    @Param('commentId') commentId: number,
+    @Param('commentId') commentId: string,
   ): Promise<DeleteCommentOutput> {
     return this.postsService.deleteComment(authUser, commentId);
   }

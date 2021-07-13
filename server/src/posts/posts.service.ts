@@ -16,6 +16,7 @@ import {
 import { DeleteCommentOutput } from './dtos/delete-comment.dto';
 import { FindCommentsByPostIdOutput } from './dtos/find-comments-by-postId.dto';
 import { EditCommentInput, EditCommentOutput } from './dtos/edit-comment.dto';
+import { CheckPostOutput } from './dtos/check-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -84,6 +85,39 @@ export class PostsService {
         ok: true,
         posts: computeLikesNumber(posts),
       };
+    } catch (error) {
+      return {
+        ok: false,
+        error,
+      };
+    }
+  }
+
+  public async checkPosts(
+    authUser: User,
+    postId: string,
+  ): Promise<CheckPostOutput> {
+    try {
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          id: authUser.id,
+        },
+        select: {
+          posts: true,
+        },
+      });
+
+      console.log(user.posts);
+      if (user.posts.find((post) => post.id === +postId)) {
+        return {
+          ok: true,
+        };
+      } else {
+        return {
+          ok: false,
+          error: '본인의 댓글이 아닙니다.',
+        };
+      }
     } catch (error) {
       return {
         ok: false,
@@ -318,14 +352,15 @@ export class PostsService {
 
   public async deleteComment(
     authUser: User,
-    commentId: number,
+    commentId: string,
   ): Promise<DeleteCommentOutput> {
     try {
       const comment = await this.prismaService.comment.findUnique({
         where: {
-          id: commentId,
+          id: +commentId,
         },
       });
+      console.log(comment);
       if (!comment) {
         return {
           ok: false,
@@ -340,13 +375,14 @@ export class PostsService {
       }
       await this.prismaService.comment.delete({
         where: {
-          id: commentId,
+          id: +commentId,
         },
       });
       return {
         ok: true,
       };
     } catch (error) {
+      console.log(error);
       return {
         ok: false,
         error,

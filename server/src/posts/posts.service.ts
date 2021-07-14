@@ -64,7 +64,7 @@ export class PostsService {
     categoryId: string,
   ): Promise<FindPostsByCategoryOutput> {
     try {
-      const posts = await this.prismaService.post.findMany({
+      let posts = await this.prismaService.post.findMany({
         where: {
           categoryId: +categoryId,
         },
@@ -80,7 +80,8 @@ export class PostsService {
           },
         },
       });
-
+      posts = posts.reverse();
+      console.log(posts);
       return {
         ok: true,
         posts: computeLikesNumber(posts),
@@ -436,7 +437,7 @@ export class PostsService {
     postId: string,
   ): Promise<FindCommentsByPostIdOutput> {
     try {
-      const post = await this.prismaService.post.findUnique({
+      let post = await this.prismaService.post.findUnique({
         where: {
           id: +postId,
         },
@@ -450,7 +451,6 @@ export class PostsService {
           error: '존재하지 않는 게시물입니다.',
         };
       }
-      console.log(post.comments);
       return {
         ok: true,
         comments: post.comments,

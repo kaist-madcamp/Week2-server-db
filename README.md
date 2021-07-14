@@ -88,12 +88,15 @@
 - Express
 - Prisma (ORM)
 
+<br />
 
 ## DB schema
 
 Mysql database schema
 
 <img width="505" alt="스크린샷 2021-07-14 오후 12 16 01" src="https://user-images.githubusercontent.com/58783348/125555606-d8cc6ba1-ed74-4230-802d-896261ddf4d2.png">
+
+<br />
 
 ## REST API
 
